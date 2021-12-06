@@ -428,3 +428,20 @@ TigoID - Selfcare CO web convergente
 );
 });
 
+app.post('/auth',(req, res)=>{
+    const {name,password} = req.body;
+    //consultar de de base de datos y validar que existen 
+    const user = {username: name};
+
+    const accessToken = generateAccessToken(user);
+    
+    res.header('authorization', accessToken).json({
+        message:'Usuario autenticado',
+        token: accessToken,
+        username : name
+    });
+});
+
+function generateAccessToken(user){
+    return jwt.sign(user, process.env.SECRET, {expiresIn:'12h'});
+}
